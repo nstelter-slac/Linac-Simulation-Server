@@ -67,9 +67,17 @@ When trying to run the server on a shared machine (like dev-srv09), another user
 In this case the server will use random ports instead, and you must set both `EPICS_CA_SERVER_PORT` and `EPICS_PVA_SERVER_PORT` again accordingly.
 The server should print the new ports into the terminal.
 
-You can also specify specific ports for the server to use, by passing cmdline args to the `setup-epics-conda.sh` script:
+You can also specify specific ports for the server to use, by setting the env-vars `LINAC_SIM_SERVER_CA_PORT` and `LINAC_SIM_SERVER_PVA_PORT` before running `setup-epics-conda.sh` or `run.sh`:
 ```
-source setup-epics-conda.sh <EPICS_CA_SERVER_PORT value> <EPICS_PVA_SERVER_PORT value>
+export LINAC_SIM_SERVER_CA_PORT=5555
+export LINAC_SIM_SERVER_PVA_PORT=6666
+
+# if client
+source setup-epics-conda.sh
+caget <pv>
+
+# if server
+./start.sh
 ```
 
 ### About the setup/start scripts
