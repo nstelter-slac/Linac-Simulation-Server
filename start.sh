@@ -12,11 +12,12 @@ else
     export LCLS_LATTICE=$1
 fi
 
- 
+
 NAME="${2:-diag0}"
 OVERVIEW="${3:-False}"
 NOISE="${4:-0.0}"
+NUM_PARTICLES="${5:-0}"
 
 # Start the server
 echo "Starting server..."
-python3 run.py --name $NAME --monitor_overview $OVERVIEW --measurement_noise_level $NOISE
+python3 run.py --name $NAME --monitor_overview $OVERVIEW --measurement_noise_level $NOISE --number_of_particles $NUM_PARTICLES

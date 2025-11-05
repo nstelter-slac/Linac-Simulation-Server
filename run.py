@@ -10,7 +10,7 @@ import lcls_tools.common.devices.yaml as yaml_directory
 import pprint
 FILEPATH= pathlib.Path(yaml_directory.__file__).parent.resolve()
 #FP= pathlib.Path(__file__).parent.resolve()
-def run_simulation_server(name, monitor_overview, measurement_noise_level):
+def run_simulation_server(name, monitor_overview, measurement_noise_level, number_of_particles):
     if name == "diag0":
         devices = load_relevant_controls(
             os.path.join( FILEPATH, "DIAG0.yaml")
@@ -25,7 +25,7 @@ def run_simulation_server(name, monitor_overview, measurement_noise_level):
         raise ValueError(f"Unknown virtual accelerator name: {name}")
 
     PVDB = create_pvdb(devices)
-    va = get_virtual_accelerator(name, monitor_overview, measurement_noise_level)
+    va = get_virtual_accelerator(name, monitor_overview, measurement_noise_level, number_of_particles)
     server = SimServer(PVDB)
     driver = SimDriver(server=server, devices=devices, virtual_accelerator=va)
 
@@ -54,7 +54,16 @@ if __name__ == "__main__":
         help="If provided, adds realistic noise to measurements. See `simulation_server.virtual_accelerator.utils.add_noise` for details.",
     )
 
+    parser.add_argument(
+        "--number_of_particles",
+        type=int,
+        default=0,
+        help="If provided, limits the number of particles to this amount.",
+    )
+
     args = parser.parse_args()
+
+    print("args.number_of_particles ", args.number_of_particles)
     run_simulation_server(
-        args.name, args.monitor_overview, args.measurement_noise_level
+        args.name, args.monitor_overview, args.measurement_noise_level, args.number_of_particles
     )

@@ -10,7 +10,7 @@ FILEPATH = pathlib.Path(__file__).parent.resolve()
 LCLS_LATTICE = pathlib.Path(os.environ.get("LCLS_LATTICE", "/sdf/group/ad/sw/scm/repos/optics/lcls-lattice/cheetah"))
 
 
-def get_virtual_accelerator(name, monitor_overview=False, measurement_noise_level=None):
+def get_virtual_accelerator(name, monitor_overview=False, measurement_noise_level=None, number_of_particles=0):
     """
     Create an instance of VirtualAccelerator for a given beamline.
 
@@ -26,6 +26,8 @@ def get_virtual_accelerator(name, monitor_overview=False, measurement_noise_leve
     measurement_noise_level: float, optional
         If provided, adds realistic noise to measurements.
         See `simulation_server.virtual_accelerator.utils.add_noise` for details.
+    num_particles: int, optional
+        If provided, limits the number of particles to this amount.
 
     Returns
     -------
@@ -59,6 +61,10 @@ def get_virtual_accelerator(name, monitor_overview=False, measurement_noise_leve
 
         mapping_file = os.path.join(FILEPATH, "mappings", "lcls_elements.csv") 
         lattice_file = os.path.join(LCLS_LATTICE,"nc_hxr.json")
+
+    if number_of_particles > 0:
+        incoming_beam.particles = incoming_beam.particles[:number_of_particles]
+        incoming_beam.survival_probabilities=incoming_beam.survival_probabilities[:number_of_particles]
 
     return VirtualAccelerator(
         lattice_file=lattice_file,
